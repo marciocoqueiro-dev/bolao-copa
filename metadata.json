@@ -1,0 +1,6 @@
+{
+  "name": "CopaPix",
+  "description": "Bolão da Copa do Mundo com pagamento via PIX, ranking, palpites e premiação transparente.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
