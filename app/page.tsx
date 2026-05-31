@@ -581,6 +581,12 @@ export default function CopaPixPage() {
         setPhone('');
       }
 
+      if (!participant) {
+        setMessage('Participante não encontrado.');
+        setSaving(false);
+        return;
+      }
+
       const { error } = await supabase
         .from('predictions')
         .upsert({
