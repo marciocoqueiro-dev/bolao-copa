@@ -281,7 +281,7 @@ export default function AdminPage() {
   async function toggleLock(match: Match) {
     if (!supabase) return;
 
-    const { error } = await supabaseClient
+    const { error } = await supabase
       .from('matches')
       .update({ locked: !match.locked })
       .eq('id', match.id);
