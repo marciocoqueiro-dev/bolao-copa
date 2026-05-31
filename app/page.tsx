@@ -584,7 +584,7 @@ export default function CopaPixPage() {
       const { error } = await supabase
         .from('predictions')
         .upsert({
-          participant_id: participant.id,
+          participant_id: participant!.id,
           match_id: currentMatch.id,
           home_guess: home,
           away_guess: away,
