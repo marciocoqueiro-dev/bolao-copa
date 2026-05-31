@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import {
   Trophy,
+  Users,
   Coins,
   Copy,
   Check,
@@ -17,7 +18,6 @@ import {
   Target,
   Volume2,
   VolumeX,
-  Users,
 } from 'lucide-react';
 
 interface Setting {
@@ -93,33 +93,49 @@ const DEFAULT_SETTINGS: Setting = {
   prize_rule: 'exact_score',
 };
 
+
 const TEAM_FLAGS: Record<string, string> = {
-  brasil: '🇧🇷',
-  brazil: '🇧🇷',
-  bra: '🇧🇷',
-  marrocos: '🇲🇦',
-  morocco: '🇲🇦',
-  mar: '🇲🇦',
-  argentina: '🇦🇷',
-  arg: '🇦🇷',
-  franca: '🇫🇷',
-  frança: '🇫🇷',
-  france: '🇫🇷',
-  alemanha: '🇩🇪',
-  germany: '🇩🇪',
-  espanha: '🇪🇸',
-  spain: '🇪🇸',
-  portugal: '🇵🇹',
-  inglaterra: '🏴',
-  england: '🏴',
-  italia: '🇮🇹',
-  itália: '🇮🇹',
-  uruguai: '🇺🇾',
-  mexico: '🇲🇽',
-  méxico: '🇲🇽',
-  eua: '🇺🇸',
-  usa: '🇺🇸',
-  canada: '🇨🇦',
+  brasil: '🇧🇷', brazil: '🇧🇷', bra: '🇧🇷',
+  argentina: '🇦🇷', arg: '🇦🇷',
+  uruguai: '🇺🇾', uru: '🇺🇾',
+  paraguai: '🇵🇾', par: '🇵🇾',
+  chile: '🇨🇱', chi: '🇨🇱',
+  colombia: '🇨🇴', col: '🇨🇴',
+  equador: '🇪🇨', ecuador: '🇪🇨', ecu: '🇪🇨',
+  peru: '🇵🇪', per: '🇵🇪',
+  bolivia: '🇧🇴', bol: '🇧🇴',
+  venezuela: '🇻🇪', ven: '🇻🇪',
+  mexico: '🇲🇽', méxico: '🇲🇽', mex: '🇲🇽',
+  estadosunidos: '🇺🇸', estadosunidosdaamerica: '🇺🇸', eua: '🇺🇸', usa: '🇺🇸',
+  canada: '🇨🇦', canadá: '🇨🇦', can: '🇨🇦',
+  costarica: '🇨🇷', crc: '🇨🇷',
+  panama: '🇵🇦', panamá: '🇵🇦', pan: '🇵🇦',
+  jamaica: '🇯🇲', jam: '🇯🇲',
+  franca: '🇫🇷', frança: '🇫🇷', france: '🇫🇷', fra: '🇫🇷',
+  alemanha: '🇩🇪', germany: '🇩🇪', ale: '🇩🇪', ger: '🇩🇪', deu: '🇩🇪',
+  espanha: '🇪🇸', spain: '🇪🇸', esp: '🇪🇸',
+  portugal: '🇵🇹', por: '🇵🇹',
+  inglaterra: '🏴', england: '🏴', eng: '🏴',
+  holanda: '🇳🇱', paisesbaixos: '🇳🇱', paísesbaixos: '🇳🇱', netherlands: '🇳🇱', ned: '🇳🇱', nld: '🇳🇱',
+  italia: '🇮🇹', itália: '🇮🇹', italy: '🇮🇹', ita: '🇮🇹',
+  belgica: '🇧🇪', bélgica: '🇧🇪', belgium: '🇧🇪', bel: '🇧🇪',
+  croacia: '🇭🇷', croácia: '🇭🇷', croatia: '🇭🇷', cro: '🇭🇷',
+  suica: '🇨🇭', suíça: '🇨🇭', switzerland: '🇨🇭', sui: '🇨🇭',
+  dinamarca: '🇩🇰', denmark: '🇩🇰', den: '🇩🇰',
+  polonia: '🇵🇱', polônia: '🇵🇱', poland: '🇵🇱', pol: '🇵🇱',
+  servia: '🇷🇸', sérvia: '🇷🇸', serbia: '🇷🇸', srb: '🇷🇸',
+  japao: '🇯🇵', japão: '🇯🇵', japan: '🇯🇵', jpn: '🇯🇵',
+  coreiadosul: '🇰🇷', coreia: '🇰🇷', southkorea: '🇰🇷', kor: '🇰🇷',
+  australia: '🇦🇺', austrália: '🇦🇺', aus: '🇦🇺',
+  ira: '🇮🇷', iran: '🇮🇷', irã: '🇮🇷', irn: '🇮🇷',
+  catar: '🇶🇦', qatar: '🇶🇦', qat: '🇶🇦',
+  arabiasaudita: '🇸🇦', arábiasaudita: '🇸🇦', saudiarabia: '🇸🇦', ksa: '🇸🇦',
+  marrocos: '🇲🇦', morocco: '🇲🇦', mar: '🇲🇦',
+  senegal: '🇸🇳', sen: '🇸🇳',
+  gana: '🇬🇭', ghana: '🇬🇭', gha: '🇬🇭',
+  camaroes: '🇨🇲', camarões: '🇨🇲', cameroon: '🇨🇲', cmr: '🇨🇲',
+  nigeria: '🇳🇬', nigéria: '🇳🇬', nga: '🇳🇬',
+  tunisia: '🇹🇳', tunísia: '🇹🇳', tun: '🇹🇳',
 };
 
 function normalizeTeamName(team?: string | null) {
@@ -154,6 +170,7 @@ function formatMatchDate(value: string | null) {
   });
 }
 
+
 function formatCountdown(ms: number) {
   if (ms <= 0) return '00h 00m 00s';
 
@@ -180,7 +197,7 @@ export default function CopaPixPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [predictionsOpen, setPredictionsOpen] = useState(true);
+  const [predictionsOpen, setPredictionsOpen] = useState(false);
   const [pixPayment, setPixPayment] = useState<PixPayment | null>(null);
   const [now, setNow] = useState(() => Date.now());
 
@@ -193,38 +210,31 @@ export default function CopaPixPage() {
   const [bgMuted, setBgMuted] = useState(true);
   const bgAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState('');
-  const [homeGuess, setHomeGuess] = useState('');
-  const [awayGuess, setAwayGuess] = useState('');
-
   useEffect(() => {
     const audio = new Audio('/moonpub-sunny-brasil-bossa-nova-60sec-492513.mp3');
     audio.loop = true;
     audio.volume = 0.25;
     bgAudioRef.current = audio;
-
-    return () => {
-      audio.pause();
-    };
+    return () => { audio.pause(); };
   }, []);
 
   useEffect(() => {
     const audio = bgAudioRef.current;
     if (!audio) return;
-
-    if (bgMuted) {
-      audio.pause();
-    } else {
-      audio.play().catch(() => {});
-    }
+    if (bgMuted) { audio.pause(); } else { audio.play().catch(() => {}); }
   }, [bgMuted]);
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, []);
+
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+
+  const [homeGuess, setHomeGuess] = useState('');
+  const [awayGuess, setAwayGuess] = useState('');
 
   useEffect(() => {
     setConfigured(isSupabaseConfigured());
@@ -272,14 +282,11 @@ export default function CopaPixPage() {
 
   const myPrediction = useMemo(() => {
     if (!currentMatch || !currentParticipant) return null;
-
-    return (
-      predictions.find(
-        (prediction) =>
-          prediction.match_id === currentMatch.id &&
-          prediction.participant_id === currentParticipant.id
-      ) || null
-    );
+    return predictions.find(
+      (prediction) =>
+        prediction.match_id === currentMatch.id &&
+        prediction.participant_id === currentParticipant.id
+    ) || null;
   }, [predictions, currentMatch, currentParticipant]);
 
   const gameFinancials = useMemo(() => {
@@ -315,22 +322,19 @@ export default function CopaPixPage() {
   }, [currentMatch?.match_time, now]);
 
   const exactWinners = useMemo(() => {
-    if (!currentMatch || currentMatch.home_score === null || currentMatch.away_score === null) {
-      return [];
-    }
+    if (!currentMatch || currentMatch.home_score === null || currentMatch.away_score === null) return [];
 
-    return paidPredictionRows.filter(
-      ({ prediction }) =>
-        prediction.home_guess === currentMatch.home_score &&
-        prediction.away_guess === currentMatch.away_score
-    );
+    return paidPredictionRows.filter(({ prediction }) => (
+      prediction.home_guess === currentMatch.home_score &&
+      prediction.away_guess === currentMatch.away_score
+    ));
   }, [currentMatch, paidPredictionRows]);
 
-  async function loadData() {
-    setLoading(true);
+  async function loadData(showLoading = false) {
+    if (showLoading) setLoading(true);
 
     if (!configured || !supabase) {
-      setLoading(false);
+      if (showLoading) setLoading(false);
       return;
     }
 
@@ -380,22 +384,13 @@ export default function CopaPixPage() {
       }
     }
 
-    setLoading(false);
+    if (showLoading) setLoading(false);
   }
 
   useEffect(() => {
-    loadData();
+    loadData(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [configured]);
-
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      loadData();
-    }, 5000);
-
-    return () => window.clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [configured, currentParticipant?.id]);
 
   useEffect(() => {
     if (myPrediction) {
@@ -404,22 +399,88 @@ export default function CopaPixPage() {
     }
   }, [myPrediction]);
 
-  function playCelebration() {
+  async function joinPool(e: React.FormEvent) {
+    e.preventDefault();
+    setMessage('');
+    setPixPayment(null);
+
+    if (!name.trim()) {
+      setMessage('Digite seu nome para entrar no bolão.');
+      return;
+    }
+
+    if (!supabase) {
+      setMessage('Supabase não configurado.');
+      return;
+    }
+
+    setSaving(true);
+
     try {
-      const audio = new Audio('/goal-celebration.mp3');
-      audio.volume = 0.5;
-      audio.play();
-    } catch {}
+      const entryAmount = Number(settings.entry_value || 20);
+
+      const pixResponse = await fetch('/api/create-pix', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: name.trim(),
+          amount: entryAmount,
+        }),
+      });
+
+      const pixData = await pixResponse.json();
+
+      if (!pixResponse.ok || !pixData?.qrCode) {
+        console.error('Erro Mercado Pago:', pixData);
+        setMessage('Erro ao gerar PIX. Confira o token do Mercado Pago e tente novamente.');
+        setSaving(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('participants')
+        .insert({
+          name: name.trim(),
+          phone: phone.trim() || null,
+          paid: false,
+          payment_id: String(pixData.paymentId),
+          payment_status: 'pending',
+          payment_amount: entryAmount,
+          payment_method: 'pix',
+          points: 0,
+        })
+        .select('*')
+        .single();
+
+      if (error) {
+        console.error(error);
+        setMessage('PIX gerado, mas não foi possível cadastrar no Supabase. Confira as permissões.');
+        setSaving(false);
+        return;
+      }
+
+      setPixPayment(pixData);
+      setCurrentParticipant(data);
+      localStorage.setItem('copapix_current_participant', JSON.stringify(data));
+      setName('');
+      setPhone('');
+      setMessage('Cadastro feito. Agora pague o PIX gerado abaixo.');
+      loadData();
+    } catch (error) {
+      console.error(error);
+      setMessage('Erro ao gerar PIX. Tente novamente.');
+    }
+
+    setSaving(false);
   }
 
   async function savePrediction(e: React.FormEvent) {
     e.preventDefault();
     setMessage('');
 
-    if (!supabase || !currentMatch) {
-      setMessage('Supabase não configurado ou nenhum jogo ativo.');
-      return;
-    }
+    if (!supabase || !currentMatch) return;
 
     if (currentMatch.locked || currentMatch.finalized) {
       setMessage('Os palpites deste jogo já foram encerrados.');
@@ -427,12 +488,7 @@ export default function CopaPixPage() {
     }
 
     if (myPrediction) {
-      setMessage('Esta participação já tem um palpite salvo. Para fazer outro palpite, gere uma nova participação.');
-      return;
-    }
-
-    if (!name.trim() && !currentParticipant) {
-      setMessage('Digite seu nome ou apelido para salvar o palpite.');
+      setMessage('Esta participação já tem um palpite salvo. Para fazer outro palpite, gere um novo PIX em “Fazer outro palpite”.');
       return;
     }
 
@@ -448,7 +504,6 @@ export default function CopaPixPage() {
 
     try {
       let participant = currentParticipant;
-      let pixData: PixPayment | null = null;
 
       if (participant) {
         const { data: refreshedParticipant, error: participantError } = await supabase
@@ -470,8 +525,14 @@ export default function CopaPixPage() {
       }
 
       if (!participant) {
-        const entryAmount = Number(settings.entry_value || 20);
+        if (!name.trim()) {
+          setMessage('Digite seu nome ou apelido para salvar o palpite.');
+          document.getElementById('entrar')?.scrollIntoView({ behavior: 'smooth' });
+          setSaving(false);
+          return;
+        }
 
+        const entryAmount = Number(settings.entry_value || 20);
         const pixResponse = await fetch('/api/create-pix', {
           method: 'POST',
           headers: {
@@ -483,7 +544,7 @@ export default function CopaPixPage() {
           }),
         });
 
-        pixData = await pixResponse.json();
+        const pixData = await pixResponse.json();
 
         if (!pixResponse.ok || !pixData?.qrCode) {
           console.error('Erro Mercado Pago:', pixData);
@@ -516,27 +577,20 @@ export default function CopaPixPage() {
 
         participant = createdParticipant;
         setPixPayment(pixData);
-      }
-
-      if (!participant) {
-        setMessage('Participante não encontrado.');
-        setSaving(false);
-        return;
+        setName('');
+        setPhone('');
       }
 
       const { error } = await supabase
         .from('predictions')
-        .upsert(
-          {
-            participant_id: participant.id,
-            match_id: currentMatch.id,
-            home_guess: home,
-            away_guess: away,
-          },
-          {
-            onConflict: 'participant_id,match_id',
-          }
-        );
+        .upsert({
+          participant_id: participant.id,
+          match_id: currentMatch.id,
+          home_guess: home,
+          away_guess: away,
+        }, {
+          onConflict: 'participant_id,match_id',
+        });
 
       if (error) {
         console.error(error);
@@ -547,21 +601,9 @@ export default function CopaPixPage() {
 
       setCurrentParticipant(participant);
       localStorage.setItem('copapix_current_participant', JSON.stringify(participant));
-
-      if (!pixData && participant.payment_id && !participant.paid) {
-        setMessage('Palpite salvo. PIX pendente para esta participação.');
-      } else {
-        setMessage(
-          participant.paid
-            ? 'Palpite salvo com sucesso.'
-            : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.'
-        );
-      }
-
-      setName('');
-      setPhone('');
+      setMessage(participant.paid ? 'Palpite salvo com sucesso.' : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.');
       playCelebration();
-      await loadData();
+      loadData();
     } catch (error) {
       console.error(error);
       setMessage('Erro ao salvar palpite. Tente novamente.');
@@ -570,11 +612,19 @@ export default function CopaPixPage() {
     setSaving(false);
   }
 
-  async function copyPix() {
+  function playCelebration() {
+  try {
+    const audio = new Audio('/goal-celebration.mp3');
+    audio.volume = 0.5;
+    audio.play();
+  } catch {}
+}
+
+async function copyPix() {
     const pixKey = pixPayment?.qrCode || '';
 
     if (!pixKey) {
-      setMessage('Salve o palpite primeiro para gerar e copiar o PIX.');
+      setMessage('Gere o PIX primeiro para copiar o código de pagamento.');
       return;
     }
 
@@ -600,7 +650,7 @@ export default function CopaPixPage() {
       setTimeout(() => setCopied(false), 1800);
     } catch (error) {
       console.error(error);
-      setMessage('Não foi possível copiar automaticamente.');
+      setMessage('Não foi possível copiar automaticamente. Toque e segure no PIX copia e cola para copiar.');
     }
   }
 
@@ -610,8 +660,6 @@ export default function CopaPixPage() {
     setPixPayment(null);
     setHomeGuess('');
     setAwayGuess('');
-    setName('');
-    setPhone('');
     setMessage('Participante desconectado neste navegador.');
   }
 
@@ -621,43 +669,30 @@ export default function CopaPixPage() {
     setPixPayment(null);
     setHomeGuess('');
     setAwayGuess('');
-    setName('');
-    setPhone('');
-    setMessage('Nova participação iniciada. Preencha seus dados e seu palpite.');
+    setMessage('Nova participação iniciada. Preencha seus dados para gerar outro PIX.');
     document.getElementById('entrar')?.scrollIntoView({ behavior: 'smooth' });
   }
 
-  const currentParticipantStatus = currentParticipant?.paid
-    ? 'Pagamento confirmado'
-    : 'Pagamento pendente';
+  const currentParticipantStatus = currentParticipant?.paid ? 'Pagamento confirmado' : 'Pagamento pendente';
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top,#0a6b3c_0%,#06110d_42%,#020806_100%)] text-white">
-      <div className="pointer-events-none fixed bottom-6 right-6 z-20 animate-bounce text-4xl drop-shadow-2xl sm:text-6xl">
-        ⚽
-      </div>
-
-      <button
-        onClick={() => setBgMuted(!bgMuted)}
-        className="fixed right-4 top-4 z-30 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur transition hover:bg-white/20"
-        title={bgMuted ? 'Tocar música' : 'Silenciar música'}
-      >
-        {bgMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
-      </button>
+      <div className="pointer-events-none fixed bottom-6 right-6 z-20 animate-bounce text-4xl drop-shadow-2xl sm:text-6xl">⚽</div>
+    <button onClick={() => setBgMuted(!bgMuted)} className="fixed top-4 right-4 z-30 grid h-11 w-11 place-items-center rounded-full border border-white/15 bg-white/10 text-white backdrop-blur transition hover:bg-white/20" title={bgMuted ? 'Tocar música' : 'Silenciar música'}>
+      {bgMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+    </button>
 
       <section className="relative overflow-hidden border-b border-yellow-300/20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(255,223,0,0.42),transparent_28%),radial-gradient(circle_at_85%_20%,rgba(0,39,118,0.65),transparent_34%),linear-gradient(135deg,#009739_0%,#026b36_36%,#002776_72%,#06110d_100%)]" />
         <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(120deg,rgba(255,255,255,.12)_0_1px,transparent_1px_22px)]" />
-
         <Image
           src="/header-copapix-familia.png"
           alt=""
           width={900}
           height={500}
-          className="pointer-events-none absolute inset-0 h-full w-full max-w-none select-none object-cover object-center opacity-[0.18] mix-blend-screen saturate-150 contrast-125"
+          className="absolute inset-0 h-full w-full max-w-none object-cover object-center opacity-[0.18] mix-blend-screen saturate-150 contrast-125 pointer-events-none select-none"
           priority
         />
-
         <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-yellow-300/35 blur-3xl" />
         <div className="absolute -bottom-28 -left-24 h-80 w-80 rounded-full bg-blue-700/45 blur-3xl" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-[#06110d]/30 to-[#06110d]" />
@@ -667,59 +702,36 @@ export default function CopaPixPage() {
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-yellow-300/40 bg-yellow-300/20 px-4 py-2 text-sm font-black text-yellow-100 shadow-[0_0_30px_rgba(255,223,0,.22)] backdrop-blur">
               🇧🇷 <Trophy size={16} /> Bolão da Copa 2026
             </div>
-
             <h1 className="max-w-3xl text-5xl font-black leading-[0.88] tracking-[-0.07em] drop-shadow-2xl sm:text-6xl md:text-8xl">
               Acerte o placar.
               <span className="block bg-gradient-to-r from-yellow-200 via-yellow-300 to-white bg-clip-text text-transparent">
                 Ganhe o prêmio.
               </span>
             </h1>
-
             <p className="mt-5 max-w-2xl text-base leading-7 text-white/[0.82] drop-shadow sm:text-lg sm:leading-8">
               PIX automático, participação individual e prêmio para quem cravar o placar exato do jogo.
             </p>
 
             <div className="mt-7 grid max-w-xl grid-cols-3 gap-2 rounded-[1.5rem] border border-white/15 bg-black/25 p-2 backdrop-blur sm:gap-3 sm:rounded-[2rem] sm:p-3">
               <div className="rounded-2xl bg-white/10 p-3 text-center">
-                <span className="block text-[10px] font-black uppercase tracking-wider text-white/60 sm:text-xs">
-                  Prêmio
-                </span>
-                <strong className="mt-1 block text-lg font-black text-yellow-200 sm:text-2xl">
-                  {brl(gameFinancials.totalPrize)}
-                </strong>
+                <span className="block text-[10px] font-black uppercase tracking-wider text-white/60 sm:text-xs">Prêmio</span>
+                <strong className="mt-1 block text-lg font-black text-yellow-200 sm:text-2xl">{brl(gameFinancials.totalPrize)}</strong>
               </div>
-
               <div className="rounded-2xl bg-white/10 p-3 text-center">
-                <span className="block text-[10px] font-black uppercase tracking-wider text-white/60 sm:text-xs">
-                  Pagos
-                </span>
-                <strong className="mt-1 block text-lg font-black text-yellow-200 sm:text-2xl">
-                  {gameFinancials.paidPredictionsCount}
-                </strong>
+                <span className="block text-[10px] font-black uppercase tracking-wider text-white/60 sm:text-xs">Pagos</span>
+                <strong className="mt-1 block text-lg font-black text-yellow-200 sm:text-2xl">{gameFinancials.paidPredictionsCount}</strong>
               </div>
-
               <div className="rounded-2xl bg-white/10 p-3 text-center">
-                <span className="block text-[10px] font-black uppercase tracking-wider text-white/60 sm:text-xs">
-                  Entrada
-                </span>
-                <strong className="mt-1 block text-lg font-black text-yellow-200 sm:text-2xl">
-                  {brl(settings.entry_value)}
-                </strong>
+                <span className="block text-[10px] font-black uppercase tracking-wider text-white/60 sm:text-xs">Entrada</span>
+                <strong className="mt-1 block text-lg font-black text-yellow-200 sm:text-2xl">{brl(settings.entry_value)}</strong>
               </div>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#entrar"
-                className="rounded-full bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400 px-7 py-4 font-black text-emerald-950 shadow-[0_18px_45px_rgba(255,223,0,.28)] transition hover:-translate-y-0.5 hover:brightness-105"
-              >
+              <a href="#entrar" className="rounded-full bg-gradient-to-r from-yellow-200 via-yellow-300 to-yellow-400 px-7 py-4 font-black text-emerald-950 shadow-[0_18px_45px_rgba(255,223,0,.28)] transition hover:-translate-y-0.5 hover:brightness-105">
                 Fazer meu palpite
               </a>
-
-              <a
-                href="#jogo-atual"
-                className="rounded-full border border-white/20 bg-white/[0.12] px-7 py-4 font-black text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20"
-              >
+              <a href="#jogo-atual" className="rounded-full border border-white/20 bg-white/[0.12] px-7 py-4 font-black text-white backdrop-blur transition hover:-translate-y-0.5 hover:bg-white/20">
                 Ver jogo atual
               </a>
             </div>
@@ -728,38 +740,24 @@ export default function CopaPixPage() {
           <div className="grid content-center gap-4">
             <div className="rounded-[2rem] border border-yellow-300/30 bg-gradient-to-br from-yellow-200 via-yellow-300 to-yellow-500 p-5 text-emerald-950 shadow-[0_0_60px_rgba(255,223,0,.32)] sm:p-6">
               <div className="flex items-center justify-between gap-4">
-                <span className="text-sm font-black uppercase tracking-[0.22em] text-emerald-950/70">
-                  🏆 Prêmio atual
-                </span>
-                <span className="rounded-full bg-emerald-950 px-3 py-1 text-xs font-black text-yellow-200">
-                  PIX
-                </span>
+                <span className="text-sm font-black uppercase tracking-[0.22em] text-emerald-950/70">🏆 Prêmio atual</span>
+                <span className="rounded-full bg-emerald-950 px-3 py-1 text-xs font-black text-yellow-200">PIX</span>
               </div>
-
               <strong className="mt-3 block text-4xl font-black tracking-tight sm:text-6xl">
                 {brl(gameFinancials.totalPrize)}
               </strong>
-
               <p className="mt-3 text-sm font-bold text-emerald-950/75">
                 Calculado somente com participações pagas para este jogo.
               </p>
             </div>
 
             <div className="rounded-[2rem] border border-white/15 bg-white/[0.10] p-5 text-center shadow-2xl backdrop-blur sm:p-6">
-              <div className="text-sm font-black uppercase tracking-[0.22em] text-yellow-200">
-                ⏰ Encerramento dos palpites
-              </div>
-
+              <div className="text-sm font-black uppercase tracking-[0.22em] text-yellow-200">⏰ Encerramento dos palpites</div>
               <div className="mt-3 rounded-3xl bg-black/30 px-4 py-5 text-4xl font-black tracking-tight text-white shadow-inner sm:text-5xl">
                 {countdown.label}
               </div>
-
               <p className="mt-3 text-sm font-bold text-white/65">
-                {countdown.ended
-                  ? 'Os palpites deste jogo devem ser encerrados pelo administrador.'
-                  : currentMatch?.match_time
-                    ? `Jogo em ${formatMatchDate(currentMatch.match_time)}`
-                    : 'Cadastre o horário do jogo no admin.'}
+                {countdown.ended ? 'Os palpites deste jogo devem ser encerrados pelo administrador.' : currentMatch?.match_time ? `Jogo em ${formatMatchDate(currentMatch.match_time)}` : 'Cadastre o horário do jogo no admin.'}
               </p>
             </div>
 
@@ -786,19 +784,74 @@ export default function CopaPixPage() {
           <MiniPrize label="Prêmio atual" value={brl(gameFinancials.totalPrize)} highlight />
         </section>
 
-        <section className="grid gap-5">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
+        <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+          <div id="entrar" className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
             <div className="mb-5 flex items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-black tracking-tight sm:text-2xl">Pagamento PIX</h2>
-                <p className="mt-1 text-sm text-emerald-100/65">
-                  Valor da entrada: {brl(settings.entry_value)}
+                <h2 className="text-xl font-black tracking-tight sm:text-2xl">Entrar no bolão</h2>
+                <p className="mt-1 text-sm text-emerald-100/65">Digite seu nome, salve o palpite e pague o PIX.</p>
+              </div>
+              <Users className="text-yellow-200" />
+            </div>
+
+            {currentParticipant ? (
+              <div className="rounded-3xl border border-white/10 bg-emerald-400/10 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-yellow-300 font-black text-emerald-950 sm:h-12 sm:w-12 sm:rounded-2xl">
+                    {getInitials(currentParticipant.name)}
+                  </div>
+                  <div>
+                    <strong className="block">{currentParticipant.name}</strong>
+                    <span className={currentParticipant.paid ? 'text-emerald-200' : 'text-yellow-200'}>
+                      {currentParticipantStatus}
+                    </span>
+                    {currentParticipant.payment_id && (
+                      <span className="mt-1 block text-xs text-emerald-100/55">
+                        PIX #{currentParticipant.payment_id} · {currentParticipant.payment_status || 'pending'}
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                  <button onClick={startNewEntry} className="rounded-full bg-yellow-300 px-4 py-2 text-sm font-black text-emerald-950">
+                    Fazer outro palpite
+                  </button>
+                  <button onClick={clearSession} className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-black text-white">
+                    Trocar participante
+                  </button>
+                </div>
+                <p className="mt-3 text-xs leading-5 text-emerald-100/65">
+                  Cada participação vale para 1 palpite deste jogo. Para enviar outro placar, gere um novo PIX.
                 </p>
               </div>
+            ) : (
+              <form onSubmit={joinPool} className="grid gap-3">
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Seu nome ou apelido"
+                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 font-bold outline-none focus:border-yellow-200"
+                />
+                <input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="WhatsApp opcional"
+                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 font-bold outline-none focus:border-yellow-200"
+                />
+                <button disabled={saving} className="rounded-full bg-yellow-300 px-5 py-4 font-black text-emerald-950 disabled:opacity-60">
+                  {saving ? 'Salvando...' : 'Entrar no bolão'}
+                </button>
+              </form>
+            )}
+          </div>
 
-              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-sm font-black text-emerald-950">
-                PIX
+      <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-black tracking-tight sm:text-2xl">Pagamento PIX</h2>
+                <p className="mt-1 text-sm text-emerald-100/65">Valor da entrada: {brl(settings.entry_value)}</p>
               </div>
+              <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-sm font-black text-emerald-950">PIX</div>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-[100px_1fr] md:grid-cols-[120px_1fr]">
@@ -814,7 +867,6 @@ export default function CopaPixPage() {
                   'QR PIX'
                 )}
               </div>
-
               <div className="space-y-3">
                 <InfoLine label="Recebedor" value={settings.pix_name || 'Mercado Pago'} />
 
@@ -826,67 +878,54 @@ export default function CopaPixPage() {
                   </div>
                 )}
 
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={copyPix}
-                    disabled={!pixPayment?.qrCode}
-                    className="inline-flex items-center gap-2 rounded-full bg-yellow-300 px-5 py-3 font-black text-emerald-950 disabled:cursor-not-allowed disabled:opacity-50"
+                <button
+                  onClick={copyPix}
+                  disabled={!pixPayment?.qrCode}
+                  className="inline-flex items-center gap-2 rounded-full bg-yellow-300 px-5 py-3 font-black text-emerald-950 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {copied ? <Check size={18} /> : <Copy size={18} />}
+                  {copied ? 'Copiado' : 'Copiar PIX'}
+                </button>
+                {pixPayment?.ticketUrl && (
+                  <a
+                    href={pixPayment.ticketUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-3 font-black text-white"
                   >
-                    {copied ? <Check size={18} /> : <Copy size={18} />}
-                    {copied ? 'Copiado' : 'Copiar PIX'}
+                    Abrir pagamento
+                  </a>
+                )}
+                {pixPayment && (
+                  <button
+                    type="button"
+                    onClick={startNewEntry}
+                    className="inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-3 font-black text-white"
+                  >
+                    Fazer outro palpite / gerar outro PIX
                   </button>
-
-                  {pixPayment?.ticketUrl && (
-                    <a
-                      href={pixPayment.ticketUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-3 font-black text-white"
-                    >
-                      Abrir pagamento
-                    </a>
-                  )}
-
-                  {pixPayment && (
-                    <button
-                      type="button"
-                      onClick={startNewEntry}
-                      className="inline-flex rounded-full border border-white/15 bg-white/10 px-5 py-3 font-black text-white"
-                    >
-                      Fazer outro palpite / gerar outro PIX
-                    </button>
-                  )}
-                </div>
-
-                {currentParticipant && (
-                  <div className="rounded-2xl border border-white/10 bg-emerald-400/10 p-3 text-sm">
-                    <strong>{currentParticipant.name}</strong>
-                    <span className={currentParticipant.paid ? 'ml-2 text-emerald-200' : 'ml-2 text-yellow-200'}>
-                      {currentParticipantStatus}
-                    </span>
-                  </div>
+                )}
+                {!pixPayment && (
+                  <p className="text-sm text-emerald-100/60">
+                    Depois de salvar o palpite, o QR Code PIX automático aparece aqui.
+                  </p>
                 )}
               </div>
             </div>
           </div>
         </section>
 
-        <section
-          id="jogo-atual"
-          className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2.2rem] sm:p-6"
-        >
+        <section id="jogo-atual" className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2.2rem] sm:p-6">
           <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
             <div>
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-emerald-300/10 px-3 py-2 text-xs font-black text-emerald-100">
                 <Target size={14} /> Jogo atual
               </div>
-
               <h2 className="text-2xl font-black tracking-tight sm:text-3xl md:text-4xl">
                 {currentMatch
                   ? `${teamFlag(currentMatch.home_team, currentMatch.home_flag)} ${currentMatch.home_team} x ${currentMatch.away_team} ${teamFlag(currentMatch.away_team, currentMatch.away_flag)}`
                   : 'Nenhum jogo ativo'}
               </h2>
-
               <p className="mt-2 text-emerald-100/65">
                 Palpites exibidos apenas para esta partida.
               </p>
@@ -897,31 +936,21 @@ export default function CopaPixPage() {
                 <div className="flex items-center justify-end gap-2 text-sm text-emerald-100/65">
                   <CalendarDays size={16} /> {formatMatchDate(currentMatch.match_time)}
                 </div>
-                <div className="mt-1 font-black text-yellow-200">
-                  {currentMatch.stage || 'Fase da Copa'}
-                </div>
+                <div className="mt-1 font-black text-yellow-200">{currentMatch.stage || 'Fase da Copa'}</div>
               </div>
             )}
           </div>
 
           {loading ? (
-            <div className="rounded-3xl bg-white/[0.05] p-8 text-center text-emerald-100/70">
-              Carregando...
-            </div>
+            <div className="rounded-3xl bg-white/[0.05] p-8 text-center text-emerald-100/70">Carregando...</div>
           ) : !currentMatch ? (
-            <div className="rounded-3xl bg-white/[0.05] p-8 text-center text-emerald-100/70">
-              Nenhum jogo ativo cadastrado.
-            </div>
+            <div className="rounded-3xl bg-white/[0.05] p-8 text-center text-emerald-100/70">Nenhum jogo ativo cadastrado.</div>
           ) : (
             <div className="grid gap-5 lg:grid-cols-[1fr_0.95fr]">
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-[2rem] sm:p-5">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3">
+          <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-[2rem] sm:p-5">
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3">
                   <TeamBlock flag={currentMatch.home_flag} team={currentMatch.home_team} />
-
-                  <div className="rounded-full bg-yellow-300 px-3 py-1.5 text-xs font-black text-emerald-950 sm:px-4 sm:py-2 sm:text-sm">
-                    VS
-                  </div>
-
+                  <div className="rounded-full bg-yellow-300 px-3 py-1.5 text-xs font-black text-emerald-950 sm:px-4 sm:py-2 sm:text-sm">VS</div>
                   <TeamBlock flag={currentMatch.away_flag} team={currentMatch.away_team} right />
                 </div>
 
@@ -934,19 +963,12 @@ export default function CopaPixPage() {
                   </div>
                 )}
 
-                <form
-                  id="entrar"
-                  onSubmit={savePrediction}
-                  className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:rounded-3xl sm:p-4"
-                >
+                <form onSubmit={savePrediction} className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:rounded-3xl sm:p-4">
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-black sm:text-xl">Meu palpite</h3>
-                      <p className="text-sm text-emerald-100/60">
-                        Digite seu nome, seu placar e gere o PIX automaticamente.
-                      </p>
+                      <p className="text-sm text-emerald-100/60">Acerte o placar exato para concorrer ao prêmio.</p>
                     </div>
-
                     {(currentMatch.locked || currentMatch.finalized) && <Lock className="text-yellow-200" />}
                   </div>
 
@@ -958,7 +980,6 @@ export default function CopaPixPage() {
                         placeholder="Seu nome ou apelido"
                         className="rounded-2xl border border-white/10 bg-black/30 px-4 py-4 font-bold outline-none focus:border-yellow-200"
                       />
-
                       <input
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
@@ -968,51 +989,37 @@ export default function CopaPixPage() {
                     </div>
                   )}
 
-                  {currentParticipant && (
-                    <div className="mb-4 rounded-2xl border border-white/10 bg-emerald-400/10 p-3 text-sm font-bold text-emerald-100">
-                      Participação atual: {currentParticipant.name} · {currentParticipantStatus}
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3">
-                    <input
-                      type="number"
-                      min="0"
-                      value={homeGuess}
-                      onChange={(e) => setHomeGuess(e.target.value)}
-                      disabled={currentMatch.locked || currentMatch.finalized || !!myPrediction}
-                      className="w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-3 text-center text-2xl font-black outline-none focus:border-yellow-200 disabled:opacity-50 sm:px-4 sm:py-4 sm:text-3xl"
-                    />
-
-                    <span className="text-xl font-black text-yellow-200 sm:text-2xl">x</span>
-
-                    <input
-                      type="number"
-                      min="0"
-                      value={awayGuess}
-                      onChange={(e) => setAwayGuess(e.target.value)}
-                      disabled={currentMatch.locked || currentMatch.finalized || !!myPrediction}
-                      className="w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-3 text-center text-2xl font-black outline-none focus:border-yellow-200 disabled:opacity-50 sm:px-4 sm:py-4 sm:text-3xl"
-                    />
+            <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3">
+              <input
+                type="number"
+                min="0"
+                value={homeGuess}
+                onChange={(e) => setHomeGuess(e.target.value)}
+                disabled={currentMatch.locked || currentMatch.finalized}
+                className="w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-3 text-center text-2xl font-black outline-none focus:border-yellow-200 disabled:opacity-50 sm:px-4 sm:py-4 sm:text-3xl"
+              />
+              <span className="text-xl font-black text-yellow-200 sm:text-2xl">x</span>
+              <input
+                type="number"
+                min="0"
+                value={awayGuess}
+                onChange={(e) => setAwayGuess(e.target.value)}
+                disabled={currentMatch.locked || currentMatch.finalized}
+                className="w-full rounded-2xl border border-white/10 bg-black/30 px-3 py-3 text-center text-2xl font-black outline-none focus:border-yellow-200 disabled:opacity-50 sm:px-4 sm:py-4 sm:text-3xl"
+              />
                   </div>
 
                   <button
-                    disabled={saving || currentMatch.locked || currentMatch.finalized || !!myPrediction}
+                    disabled={saving || currentMatch.locked || currentMatch.finalized}
                     className="mt-4 w-full rounded-full bg-yellow-300 px-5 py-4 font-black text-emerald-950 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {saving
-                      ? 'Salvando...'
-                      : myPrediction
-                        ? 'Palpite já salvo'
-                        : 'Salvar palpite e gerar PIX'}
+                    {myPrediction ? 'Palpite já salvo' : 'Salvar palpite'}
                   </button>
 
                   {myPrediction && (
                     <div className="mt-4 rounded-2xl bg-emerald-300/10 p-3 text-sm font-bold text-emerald-100">
                       <CheckCircle2 className="mr-2 inline" size={16} />
-                      Seu palpite salvo: {currentMatch.home_team} {myPrediction.home_guess} x{' '}
-                      {myPrediction.away_guess} {currentMatch.away_team}
-
+                      Seu palpite salvo: {currentMatch.home_team} {myPrediction.home_guess} x {myPrediction.away_guess} {currentMatch.away_team}
                       <button
                         type="button"
                         onClick={startNewEntry}
@@ -1026,64 +1033,50 @@ export default function CopaPixPage() {
               </div>
 
               <div className="grid gap-5">
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-[2rem] sm:p-5">
-                  <button
-                    type="button"
-                    onClick={() => setPredictionsOpen((open) => !open)}
-                    className="flex w-full items-center justify-between gap-3 text-left"
-                    aria-expanded={predictionsOpen}
-                  >
-                    <div>
-                      <h3 className="text-lg font-black sm:text-xl">Palpites deste jogo</h3>
-                      <p className="mt-1 text-sm text-emerald-100/60">
-                        {paidPredictionRows.length} palpite
-                        {paidPredictionRows.length === 1 ? '' : 's'} confirmado
-                        {paidPredictionRows.length === 1 ? '' : 's'}
-                      </p>
+          <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-[2rem] sm:p-5">
+            <button
+              type="button"
+              onClick={() => setPredictionsOpen((open) => !open)}
+              className="flex w-full items-center justify-between gap-3 text-left"
+              aria-expanded={predictionsOpen}
+            >
+              <div>
+                <h3 className="text-lg font-black sm:text-xl">Palpites deste jogo</h3>
+                <p className="mt-1 text-sm text-emerald-100/60">
+                  {paidPredictionRows.length} palpite{paidPredictionRows.length === 1 ? '' : 's'} confirmado{paidPredictionRows.length === 1 ? '' : 's'}
+                </p>
+              </div>
+              <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full bg-yellow-300 font-black text-emerald-950 transition-transform ${predictionsOpen ? 'rotate-180' : ''}`}>
+                ↓
+              </span>
+            </button>
+
+            {predictionsOpen && (
+              <div className="mt-4 grid max-h-80 gap-3 overflow-y-auto pr-1">
+                {paidPredictionRows.length ? (
+                  paidPredictionRows.map(({ prediction, participant }) => (
+                    <div key={prediction.id} className="grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-2xl bg-white/[0.06] p-3 sm:gap-3">
+                      <div className="grid h-9 w-9 place-items-center rounded-xl bg-yellow-300 font-black text-emerald-950 sm:h-11 sm:w-11 sm:rounded-2xl">
+                        {participant ? getInitials(participant.name) : '?'}
+                      </div>
+                      <div>
+                        <strong className="block">{participant?.name || 'Participante'}</strong>
+                        <span className="text-sm text-emerald-100/60">PIX confirmado</span>
+                      </div>
+                      <strong className="text-yellow-200">{prediction.home_guess} x {prediction.away_guess}</strong>
                     </div>
-
-                    <span
-                      className={`grid h-10 w-10 shrink-0 place-items-center rounded-full bg-yellow-300 font-black text-emerald-950 transition-transform ${
-                        predictionsOpen ? 'rotate-180' : ''
-                      }`}
-                    >
-                      ↓
-                    </span>
-                  </button>
-
-                  {predictionsOpen && (
-                    <div className="mt-4 grid max-h-80 gap-3 overflow-y-auto pr-1">
-                      {paidPredictionRows.length ? (
-                        paidPredictionRows.map(({ prediction, participant }) => (
-                          <div
-                            key={prediction.id}
-                            className="grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-2xl bg-white/[0.06] p-3 sm:gap-3"
-                          >
-                            <div className="grid h-9 w-9 place-items-center rounded-xl bg-yellow-300 font-black text-emerald-950 sm:h-11 sm:w-11 sm:rounded-2xl">
-                              {participant ? getInitials(participant.name) : '?'}
-                            </div>
-
-                            <div>
-                              <strong className="block">{participant?.name || 'Participante'}</strong>
-                              <span className="text-sm text-emerald-100/60">PIX confirmado</span>
-                            </div>
-
-                            <strong className="text-yellow-200">
-                              {prediction.home_guess} x {prediction.away_guess}
-                            </strong>
-                          </div>
-                        ))
-                      ) : (
-                        <div className="rounded-2xl bg-white/[0.05] p-4 text-emerald-100/65">
-                          Nenhum palpite confirmado para este jogo ainda.
-                        </div>
-                      )}
-                    </div>
-                  )}
+                  ))
+                ) : (
+                  <div className="rounded-2xl bg-white/[0.05] p-4 text-emerald-100/65">
+                    Nenhum palpite confirmado para este jogo ainda.
+                  </div>
+                )}
+              </div>
+            )}
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-[2rem] sm:p-5">
-                  <h3 className="mb-4 text-lg font-black sm:text-xl">Resultado do prêmio</h3>
+          <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-[2rem] sm:p-5">
+            <h3 className="mb-4 text-lg font-black sm:text-xl">Resultado do prêmio</h3>
 
                   {currentMatch.home_score === null || currentMatch.away_score === null ? (
                     <div className="rounded-2xl bg-yellow-300/10 p-4 text-yellow-100">
@@ -1094,14 +1087,11 @@ export default function CopaPixPage() {
                     <div className="grid gap-3">
                       <div className="rounded-2xl bg-emerald-300/10 p-4 text-emerald-100">
                         <Trophy className="mr-2 inline text-yellow-200" size={18} />
-                        {exactWinners.length} vencedor(es). Cada um recebe{' '}
-                        {brl(gameFinancials.totalPrize / exactWinners.length)}.
+                        {exactWinners.length} vencedor(es). Cada um recebe {brl(gameFinancials.totalPrize / exactWinners.length)}.
                       </div>
-
                       {exactWinners.map(({ prediction, participant }) => (
                         <div key={prediction.id} className="rounded-2xl bg-white/[0.06] p-3 font-bold">
-                          🏆 {participant?.name || 'Participante'} — {prediction.home_guess} x{' '}
-                          {prediction.away_guess}
+                          🏆 {participant?.name || 'Participante'} — {prediction.home_guess} x {prediction.away_guess}
                         </div>
                       ))}
                     </div>
@@ -1118,9 +1108,8 @@ export default function CopaPixPage() {
         </section>
 
         <section className="grid gap-5 lg:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
-            <h2 className="text-xl font-black tracking-tight sm:text-2xl">Regra do jogo</h2>
-
+        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
+          <h2 className="text-xl font-black tracking-tight sm:text-2xl">Regra do jogo</h2>
             <div className="mt-5 grid gap-3">
               <Rule title="💰 Prêmio atual" text={`${brl(gameFinancials.totalPrize)} disponíveis para este jogo.`} />
               <Rule title="👥 Participações pagas" text={`${gameFinancials.paidPredictionsCount} participação(ões) confirmada(s).`} />
@@ -1132,32 +1121,19 @@ export default function CopaPixPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
-            <h2 className="text-xl font-black tracking-tight sm:text-2xl">Próximos jogos</h2>
-
+        <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
+          <h2 className="text-xl font-black tracking-tight sm:text-2xl">Próximos jogos</h2>
             <div className="mt-5 grid gap-3">
               {matches
                 .filter((match) => match.id !== currentMatch?.id)
                 .slice(0, 4)
                 .map((match) => (
-                  <div
-                    key={match.id}
-                    className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-white/[0.06] p-3 sm:flex-nowrap sm:gap-3 sm:p-4"
-                  >
-                    <strong>
-                      {teamFlag(match.home_team, match.home_flag)} {match.home_team} x {match.away_team}{' '}
-                      {teamFlag(match.away_team, match.away_flag)}
-                    </strong>
-
-                    <span className="text-sm text-emerald-100/60">
-                      {formatMatchDate(match.match_time)}
-                    </span>
+                  <div key={match.id} className="flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-white/[0.06] p-3 sm:flex-nowrap sm:gap-3 sm:p-4">
+                    <strong>{teamFlag(match.home_team, match.home_flag)} {match.home_team} x {match.away_team} {teamFlag(match.away_team, match.away_flag)}</strong>
+                    <span className="text-sm text-emerald-100/60">{formatMatchDate(match.match_time)}</span>
                   </div>
                 ))}
-
-              {matches.length <= 1 && (
-                <p className="text-emerald-100/60">Nenhum próximo jogo cadastrado.</p>
-              )}
+              {matches.length <= 1 && <p className="text-emerald-100/60">Nenhum próximo jogo cadastrado.</p>}
             </div>
           </div>
         </section>
@@ -1177,32 +1153,16 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
     <div className="rounded-2xl border border-white/10 bg-black/20 p-4 sm:rounded-3xl sm:p-5">
       <div className="mb-3 text-yellow-200">{icon}</div>
       <span className="block text-xs font-bold text-emerald-100/60 sm:text-sm">{label}</span>
-      <strong className="mt-1 block text-2xl font-black tracking-tight text-yellow-200 sm:text-3xl">
-        {value}
-      </strong>
+      <strong className="mt-1 block text-2xl font-black tracking-tight text-yellow-200 sm:text-3xl">{value}</strong>
     </div>
   );
 }
 
-function MiniPrize({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
+function MiniPrize({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div
-      className={`rounded-2xl border p-4 shadow-2xl sm:rounded-3xl sm:p-5 ${
-        highlight ? 'border-yellow-200/25 bg-yellow-300/10' : 'border-white/10 bg-white/[0.06]'
-      }`}
-    >
+    <div className={`rounded-2xl border p-4 shadow-2xl sm:rounded-3xl sm:p-5 ${highlight ? 'border-yellow-200/25 bg-yellow-300/10' : 'border-white/10 bg-white/[0.06]'}`}>
       <span className="block text-xs font-bold text-emerald-100/60 sm:text-sm">{label}</span>
-      <strong className="mt-2 block text-xl font-black text-yellow-200 sm:text-2xl">
-        {value}
-      </strong>
+      <strong className="mt-2 block text-xl font-black text-yellow-200 sm:text-2xl">{value}</strong>
     </div>
   );
 }
@@ -1210,25 +1170,13 @@ function MiniPrize({
 function InfoLine({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <span className="block text-xs font-black uppercase tracking-wider text-emerald-100/50">
-        {label}
-      </span>
-      <strong className="mt-1 block break-words text-base text-white sm:text-lg">
-        {value}
-      </strong>
+      <span className="block text-xs font-black uppercase tracking-wider text-emerald-100/50">{label}</span>
+      <strong className="mt-1 block break-words text-base text-white sm:text-lg">{value}</strong>
     </div>
   );
 }
 
-function TeamBlock({
-  flag,
-  team,
-  right,
-}: {
-  flag: string | null;
-  team: string;
-  right?: boolean;
-}) {
+function TeamBlock({ flag, team, right }: { flag: string | null; team: string; right?: boolean }) {
   const finalFlag = teamFlag(team, flag);
 
   return (
@@ -1238,9 +1186,7 @@ function TeamBlock({
           {finalFlag}
         </div>
       )}
-
       <strong className="text-base font-black sm:text-xl md:text-2xl">{team}</strong>
-
       {right && (
         <div className="grid h-12 w-12 place-items-center rounded-full border border-yellow-300/30 bg-white/15 text-3xl shadow-lg sm:h-16 sm:w-16 sm:text-4xl">
           {finalFlag}
