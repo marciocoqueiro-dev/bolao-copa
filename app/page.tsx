@@ -482,33 +482,6 @@ export default function CopaPixPage() {
 
     if (!supabase || !currentMatch) return;
 
-    if (!currentParticipant) {
-      setMessage('Entre no bolão antes de enviar seu palpite.');
-      document.getElementById('entrar')?.scrollIntoView({ behavior: 'smooth' });
-      return;
-    }
-
-    const { data: participant, error: participantError } = await supabase
-      .from('participants')
-      .select('*')
-      .eq('id', currentParticipant.id)
-      .maybeSingle();
-
-    if (participantError || !participant) {
-      console.error(participantError);
-      setMessage('Não encontrei seu cadastro. Cadastre-se novamente.');
-      localStorage.removeItem('copapix_current_participant');
-      setCurrentParticipant(null);
-      return;
-    }
-
-    if (!participant.paid) {
-      setCurrentParticipant(participant);
-      localStorage.setItem('copapix_current_participant', JSON.stringify(participant));
-      setMessage('Seu pagamento ainda está pendente. Aguarde a confirmação do organizador.');
-      return;
-    }
-
     if (currentMatch.locked || currentMatch.finalized) {
       setMessage('Os palpites deste jogo já foram encerrados.');
       return;
@@ -529,28 +502,114 @@ export default function CopaPixPage() {
 
     setSaving(true);
 
-    const { error } = await supabase
-      .from('predictions')
-      .upsert({
-        participant_id: participant.id,
-        match_id: currentMatch.id,
-        home_guess: home,
-        away_guess: away,
-      }, {
-        onConflict: 'participant_id,match_id',
-      });
+    try {
+      let participant = currentParticipant;
 
-    setSaving(false);
+      if (participant) {
+        const { data: refreshedParticipant, error: participantError } = await supabase
+          .from('participants')
+          .select('*')
+          .eq('id', participant.id)
+          .maybeSingle();
 
-    if (error) {
+        if (participantError || !refreshedParticipant) {
+          console.error(participantError);
+          localStorage.removeItem('copapix_current_participant');
+          setCurrentParticipant(null);
+          setMessage('Não encontrei seu cadastro. Informe seu nome e salve o palpite novamente.');
+          setSaving(false);
+          return;
+        }
+
+        participant = refreshedParticipant;
+      }
+
+      if (!participant) {
+        if (!name.trim()) {
+          setMessage('Digite seu nome ou apelido para salvar o palpite.');
+          document.getElementById('entrar')?.scrollIntoView({ behavior: 'smooth' });
+          setSaving(false);
+          return;
+        }
+
+        const entryAmount = Number(settings.entry_value || 20);
+        const pixResponse = await fetch('/api/create-pix', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: name.trim(),
+            amount: entryAmount,
+          }),
+        });
+
+        const pixData = await pixResponse.json();
+
+        if (!pixResponse.ok || !pixData?.qrCode) {
+          console.error('Erro Mercado Pago:', pixData);
+          setMessage('Erro ao gerar PIX. Confira o token do Mercado Pago e tente novamente.');
+          setSaving(false);
+          return;
+        }
+
+        const { data: createdParticipant, error: createParticipantError } = await supabase
+          .from('participants')
+          .insert({
+            name: name.trim(),
+            phone: phone.trim() || null,
+            paid: false,
+            payment_id: String(pixData.paymentId),
+            payment_status: 'pending',
+            payment_amount: entryAmount,
+            payment_method: 'pix',
+            points: 0,
+          })
+          .select('*')
+          .single();
+
+        if (createParticipantError || !createdParticipant) {
+          console.error(createParticipantError);
+          setMessage('PIX gerado, mas não foi possível cadastrar no Supabase. Confira as permissões.');
+          setSaving(false);
+          return;
+        }
+
+        participant = createdParticipant;
+        setPixPayment(pixData);
+        setName('');
+        setPhone('');
+      }
+
+      const { error } = await supabase
+        .from('predictions')
+        .upsert({
+          participant_id: participant.id,
+          match_id: currentMatch.id,
+          home_guess: home,
+          away_guess: away,
+        }, {
+          onConflict: 'participant_id,match_id',
+        });
+
+      if (error) {
+        console.error(error);
+        setMessage('Erro ao salvar palpite. Confira as policies da tabela predictions.');
+        setSaving(false);
+        return;
+      }
+
+      setCurrentParticipant(participant);
+      localStorage.setItem('copapix_current_participant', JSON.stringify(participant));
+      setMessage(participant.paid ? 'Palpite salvo com sucesso.' : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.');
+      playCelebration();
+      loadData();
+    } catch (error) {
       console.error(error);
-      setMessage('Erro ao salvar palpite. Confira as policies da tabela predictions.');
-      return;
+      setMessage('Erro ao salvar palpite. Tente novamente.');
     }
 
-    setMessage('Palpite salvo com sucesso.');
-    playCelebration();
-    loadData();
+    setSaving(false);
   }
 
   function playCelebration() {
@@ -730,7 +789,7 @@ async function copyPix() {
             <div className="mb-5 flex items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-black tracking-tight sm:text-2xl">Entrar no bolão</h2>
-                <p className="mt-1 text-sm text-emerald-100/65">Cadastre-se, faça o PIX e aguarde confirmação.</p>
+                <p className="mt-1 text-sm text-emerald-100/65">Digite seu nome, salve o palpite e pague o PIX.</p>
               </div>
               <Users className="text-yellow-200" />
             </div>
@@ -848,7 +907,7 @@ async function copyPix() {
                 )}
                 {!pixPayment && (
                   <p className="text-sm text-emerald-100/60">
-                    Depois de entrar no bolão, o QR Code PIX automático aparece aqui.
+                    Depois de salvar o palpite, o QR Code PIX automático aparece aqui.
                   </p>
                 )}
               </div>
@@ -912,6 +971,23 @@ async function copyPix() {
                     </div>
                     {(currentMatch.locked || currentMatch.finalized) && <Lock className="text-yellow-200" />}
                   </div>
+
+                  {!currentParticipant && (
+                    <div className="mb-4 grid gap-3 sm:grid-cols-[1fr_0.8fr]">
+                      <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Seu nome ou apelido"
+                        className="rounded-2xl border border-white/10 bg-black/30 px-4 py-4 font-bold outline-none focus:border-yellow-200"
+                      />
+                      <input
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        placeholder="WhatsApp opcional"
+                        className="rounded-2xl border border-white/10 bg-black/30 px-4 py-4 font-bold outline-none focus:border-yellow-200"
+                      />
+                    </div>
+                  )}
 
             <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-3">
               <input

@@ -168,6 +168,12 @@ export default function AdminPage() {
 
   useEffect(() => {
     loadData();
+    const interval = window.setInterval(() => {
+      loadData();
+    }, 5000);
+
+    return () => window.clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function saveSettings() {
@@ -690,6 +696,9 @@ export default function AdminPage() {
                         <p className="font-black">{participant?.name || 'Participante removido'}</p>
                         <p className="text-sm text-slate-400">
                           Palpite: {prediction.home_guess} x {prediction.away_guess}
+                        </p>
+                        <p className="mt-1 text-xs text-slate-500">
+                          Enviado em: {dateLabel(prediction.created_at)} · {participant?.phone || 'Sem telefone'}
                         </p>
                       </div>
                       <Badge ok={Boolean(participant?.paid)}>{participant?.paid ? 'Pago' : 'Pendente'}</Badge>
