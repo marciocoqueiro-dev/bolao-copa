@@ -601,7 +601,7 @@ export default function CopaPixPage() {
 
       setCurrentParticipant(participant);
       localStorage.setItem('copapix_current_participant', JSON.stringify(participant));
-      setMessage(participant.paid ? 'Palpite salvo com sucesso.' : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.');
+      setMessage(participant!.paid ? 'Palpite salvo com sucesso.' : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.');
       playCelebration();
       loadData();
     } catch (error) {
