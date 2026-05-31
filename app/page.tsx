@@ -581,7 +581,13 @@ export default function CopaPixPage() {
         setPhone('');
       }
 
-      const savedParticipant: Participant = participant;
+      if (!participant) {
+        setMessage('Participante não encontrado.');
+        setSaving(false);
+        return;
+      }
+
+      const savedParticipant = participant;
 
       const { error } = await supabase
         .from('predictions')
