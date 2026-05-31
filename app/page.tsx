@@ -326,11 +326,11 @@ export default function CopaPixPage() {
     );
   }, [currentMatch, paidPredictionRows]);
 
-  async function loadData() {
-    setLoading(true);
+  async function loadData(showLoading = false) {
+  if (showLoading) setLoading(true);
 
     if (!configured || !supabase) {
-      setLoading(false);
+      if (showLoading) setLoading(false);
       return;
     }
 
