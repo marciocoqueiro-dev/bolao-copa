@@ -581,10 +581,12 @@ export default function CopaPixPage() {
         setPhone('');
       }
 
+      const savedParticipant: Participant = participant;
+
       const { error } = await supabase
         .from('predictions')
         .upsert({
-          participant_id: participant!.id,
+          participant_id: savedParticipant.id,
           match_id: currentMatch.id,
           home_guess: home,
           away_guess: away,
@@ -599,11 +601,11 @@ export default function CopaPixPage() {
         return;
       }
 
-      setCurrentParticipant(participant);
-      localStorage.setItem('copapix_current_participant', JSON.stringify(participant));
-      setMessage(participant!.paid ? 'Palpite salvo com sucesso.' : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.');
+      setCurrentParticipant(savedParticipant);
+      localStorage.setItem('copapix_current_participant', JSON.stringify(savedParticipant));
+      setMessage(savedParticipant.paid ? 'Palpite salvo com sucesso.' : 'Palpite salvo com sucesso. Agora pague o PIX e aguarde a confirmação.');
       playCelebration();
-      loadData();
+      loadData(false);
     } catch (error) {
       console.error(error);
       setMessage('Erro ao salvar palpite. Tente novamente.');
@@ -784,66 +786,7 @@ async function copyPix() {
           <MiniPrize label="Prêmio atual" value={brl(gameFinancials.totalPrize)} highlight />
         </section>
 
-        <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-          <div id="entrar" className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
-            <div className="mb-5 flex items-center justify-between gap-3">
-              <div>
-                <h2 className="text-xl font-black tracking-tight sm:text-2xl">Entrar no bolão</h2>
-                <p className="mt-1 text-sm text-emerald-100/65">Digite seu nome, salve o palpite e pague o PIX.</p>
-              </div>
-              <Users className="text-yellow-200" />
-            </div>
-
-            {currentParticipant ? (
-              <div className="rounded-3xl border border-white/10 bg-emerald-400/10 p-4">
-                <div className="flex items-center gap-3">
-                  <div className="grid h-10 w-10 place-items-center rounded-xl bg-yellow-300 font-black text-emerald-950 sm:h-12 sm:w-12 sm:rounded-2xl">
-                    {getInitials(currentParticipant.name)}
-                  </div>
-                  <div>
-                    <strong className="block">{currentParticipant.name}</strong>
-                    <span className={currentParticipant.paid ? 'text-emerald-200' : 'text-yellow-200'}>
-                      {currentParticipantStatus}
-                    </span>
-                    {currentParticipant.payment_id && (
-                      <span className="mt-1 block text-xs text-emerald-100/55">
-                        PIX #{currentParticipant.payment_id} · {currentParticipant.payment_status || 'pending'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="mt-4 grid gap-2 sm:grid-cols-2">
-                  <button onClick={startNewEntry} className="rounded-full bg-yellow-300 px-4 py-2 text-sm font-black text-emerald-950">
-                    Fazer outro palpite
-                  </button>
-                  <button onClick={clearSession} className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-black text-white">
-                    Trocar participante
-                  </button>
-                </div>
-                <p className="mt-3 text-xs leading-5 text-emerald-100/65">
-                  Cada participação vale para 1 palpite deste jogo. Para enviar outro placar, gere um novo PIX.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={joinPool} className="grid gap-3">
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Seu nome ou apelido"
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 font-bold outline-none focus:border-yellow-200"
-                />
-                <input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="WhatsApp opcional"
-                  className="rounded-2xl border border-white/10 bg-black/25 px-4 py-4 font-bold outline-none focus:border-yellow-200"
-                />
-                <button disabled={saving} className="rounded-full bg-yellow-300 px-5 py-4 font-black text-emerald-950 disabled:opacity-60">
-                  {saving ? 'Salvando...' : 'Entrar no bolão'}
-                </button>
-              </form>
-            )}
-          </div>
+        <section className="grid gap-5">
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 shadow-2xl backdrop-blur sm:rounded-[2rem] sm:p-6">
         <div className="mb-5 flex items-center justify-between gap-3">
@@ -963,11 +906,11 @@ async function copyPix() {
                   </div>
                 )}
 
-                <form onSubmit={savePrediction} className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:rounded-3xl sm:p-4">
+                <form id="entrar" onSubmit={savePrediction} className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] p-3 sm:rounded-3xl sm:p-4">
                   <div className="mb-4 flex items-center justify-between gap-3">
                     <div>
                       <h3 className="text-lg font-black sm:text-xl">Meu palpite</h3>
-                      <p className="text-sm text-emerald-100/60">Acerte o placar exato para concorrer ao prêmio.</p>
+                      <p className="text-sm text-emerald-100/60">Digite seu nome, seu placar e gere o PIX automaticamente.</p>
                     </div>
                     {(currentMatch.locked || currentMatch.finalized) && <Lock className="text-yellow-200" />}
                   </div>
@@ -1013,7 +956,7 @@ async function copyPix() {
                     disabled={saving || currentMatch.locked || currentMatch.finalized}
                     className="mt-4 w-full rounded-full bg-yellow-300 px-5 py-4 font-black text-emerald-950 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    {myPrediction ? 'Palpite já salvo' : 'Salvar palpite'}
+                    {myPrediction ? 'Palpite já salvo' : 'Salvar palpite e gerar PIX'}
                   </button>
 
                   {myPrediction && (
